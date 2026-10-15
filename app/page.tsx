@@ -115,6 +115,12 @@ function validarEmail(correo: string): { valido: boolean; mensaje?: string } {
 }
 
 export default function Home() {
+  const [ahora, setAhora] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setAhora(new Date());
+  }, []);
+
   const [tab, setTab] = useState<'tesoreria' | 'inventario' | 'contactos'>('tesoreria');
   const [loading, setLoading] = useState(true);
 
@@ -379,44 +385,44 @@ export default function Home() {
   // ==========================================
   const movimientosPorPeriodo = useMemo(() => {
     if (periodoFiltro === 'todos') return movimientos;
+    if (!ahora) return movimientos;
 
-    const ahora = new Date();
-    const añoActual = ahora.getFullYear();
+    const anoActual = ahora.getFullYear();
     const mesActual = ahora.getMonth();
 
     return movimientos.filter((m) => {
       const fechaMov = new Date(m.fecha);
-      const añoMov = fechaMov.getFullYear();
+      const anoMov = fechaMov.getFullYear();
       const mesMov = fechaMov.getMonth();
 
       if (periodoFiltro === 'mes_actual') {
-        return añoMov === añoActual && mesMov === mesActual;
+        return anoMov === anoActual && mesMov === mesActual;
       }
 
       if (periodoFiltro === 'mes_anterior') {
-        const fechaMesAnterior = new Date(añoActual, mesActual - 1, 1);
-        return añoMov === fechaMesAnterior.getFullYear() && mesMov === fechaMesAnterior.getMonth();
+        const fechaMesAnterior = new Date(anoActual, mesActual - 1, 1);
+        return anoMov === fechaMesAnterior.getFullYear() && mesMov === fechaMesAnterior.getMonth();
       }
 
       if (periodoFiltro === '1t') {
-        return añoMov === añoActual && mesMov >= 0 && mesMov <= 2;
+        return anoMov === anoActual && mesMov >= 0 && mesMov <= 2;
       }
 
       if (periodoFiltro === '2t') {
-        return añoMov === añoActual && mesMov >= 3 && mesMov <= 5;
+        return anoMov === anoActual && mesMov >= 3 && mesMov <= 5;
       }
 
       if (periodoFiltro === '3t') {
-        return añoMov === añoActual && mesMov >= 6 && mesMov <= 8;
+        return anoMov === anoActual && mesMov >= 6 && mesMov <= 8;
       }
 
       if (periodoFiltro === '4t') {
-        return añoMov === añoActual && mesMov >= 9 && mesMov <= 11;
+        return anoMov === anoActual && mesMov >= 9 && mesMov <= 11;
       }
 
       return true;
     });
-  }, [movimientos, periodoFiltro]);
+  }, [movimientos, periodoFiltro, ahora]);
 
   const movimientosFiltrados = useMemo(() => {
     return movimientosPorPeriodo.filter((m) => {
@@ -508,10 +514,10 @@ export default function Home() {
               {/* Branding Impulso Web */}
               <div className="flex items-center gap-3">
                 <img
-  src="/logo-impulso.png"
-  alt="Logo Impulso Web"
-  className="w-10 h-10 object-contain rounded-lg bg-white p-1 border border-gray-100 shadow-sm"
-/>
+                  src="/logo-impulso.png"
+                  alt="Logo Impulso Web"
+                  className="w-10 h-10 object-contain rounded-lg bg-white p-1 border border-gray-100 shadow-sm"
+                />
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-black text-gray-900 tracking-tight">Versión Demo</span>
@@ -1229,10 +1235,10 @@ export default function Home() {
       {/* Pie de Página Corporativo */}
       <footer className="mt-12 py-6 border-t border-gray-200 text-center text-xs text-gray-500 flex flex-col items-center justify-center gap-2">
         <img
-  src="/logo-impulso.png"
-  alt="Impulso Web"
-  className="w-7 h-7 object-contain rounded bg-white p-0.5 border border-gray-100"
-/>
+          src="/logo-impulso.png"
+          alt="Impulso Web"
+          className="w-7 h-7 object-contain rounded bg-white p-0.5 border border-gray-100"
+        />
         <p>
           Desarrollado y mantenido por <strong className="text-gray-800 font-semibold">Impulso Web</strong> — Soluciones Digitales a Medida
         </p>
