@@ -624,13 +624,12 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans text-gray-800 flex flex-col justify-between">
-      
+<div className="min-h-screen bg-gray-100 font-sans text-gray-800 flex flex-col justify-between overflow-x-hidden">      
       <div>
         {/* Barra de Navegación */}
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center space-x-6">
+          <div className="max-w-6xl mx-auto px-4 py-3 md:px-6 md:h-16 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:space-x-4">
               
               {/* Branding Impulso Web */}
               <div className="flex items-center gap-3">
@@ -651,8 +650,7 @@ export default function Home() {
               </div>
 
               {/* Pestañas de navegación */}
-              <div className="flex space-x-2">
-                <button
+<div className="flex flex-wrap gap-1.5">                <button
                   onClick={() => setTab('tesoreria')}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     tab === 'tesoreria' ? 'bg-black text-white' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -684,8 +682,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
-              {tab === 'tesoreria' && (
+<div className="flex items-center justify-end gap-2 border-t md:border-t-0 pt-2 md:pt-0 border-gray-100">              {tab === 'tesoreria' && (
                 <button
                   onClick={exportarExcelBonito}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors cursor-pointer"
@@ -795,8 +792,7 @@ export default function Home() {
               {/* Arqueo de Caja */}
               <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-wrap items-center justify-between gap-4 text-xs">
                 <span className="font-bold text-gray-500 uppercase tracking-wider">Desglose de Caja:</span>
-                <div className="flex gap-6">
-                  <span>Caja Efectivo: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('efectivo').toFixed(2)} €</strong></span>
+<div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:w-auto">                  <span>Caja Efectivo: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('efectivo').toFixed(2)} €</strong></span>
                   <span>Datáfono / Tarjeta: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('tarjeta').toFixed(2)} €</strong></span>
                   <span>Banco / Transferencia: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('transferencia').toFixed(2)} €</strong></span>
                 </div>
@@ -813,17 +809,17 @@ export default function Home() {
                       <span className="font-bold text-blue-900">¿Es una venta de inventario?</span>
                       
                       <select
-                        value={productoSeleccionadoId}
-                        onChange={(e) => handleSeleccionarProducto(e.target.value)}
-                        className="border rounded-md p-1.5 bg-white text-gray-800 focus:outline-none"
-                      >
-                        <option value="">(Venta directa / Servicio libre)</option>
-                        {productos.map(p => (
-                          <option key={p.id} value={p.id}>
-                            {p.nombre} — {Number(p.precio_venta).toFixed(2)} € (Stock: {p.stock_actual} uds)
-                          </option>
-                        ))}
-                      </select>
+  value={productoSeleccionadoId}
+  onChange={(e) => handleSeleccionarProducto(e.target.value)}
+  className="w-full sm:w-auto max-w-full border rounded-md p-2 bg-white text-gray-900 focus:outline-none truncate"
+>
+  <option value="">(Venta directa / Servicio libre)</option>
+  {productos.map(p => (
+    <option key={p.id} value={p.id}>
+      {p.nombre} — {Number(p.precio_venta).toFixed(2)} € (Stock: {p.stock_actual} uds)
+    </option>
+  ))}
+</select>
 
                       {productoSeleccionadoId && (
                         <div className="flex items-center gap-2">
@@ -926,11 +922,12 @@ export default function Home() {
                     </div>
 
                     <div className="sm:col-span-2 md:col-span-5 flex justify-end items-end mt-2">
-                      <button
-                        type="submit"
-                        disabled={guardandoMov}
-                        className="px-5 py-2.5 bg-black hover:bg-gray-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
-                      >
+  <div className="sm:col-span-2 md:col-span-6 flex justify-end items-end mt-2">
+  <button
+    type="submit"
+    disabled={guardandoMov}
+    className="w-full sm:w-auto px-5 py-2.5 bg-black hover:bg-gray-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+  >
                         {guardandoMov ? 'Guardando...' : 'Añadir Registro'}
                       </button>
                     </div>
