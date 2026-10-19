@@ -586,8 +586,7 @@ export default function Home() {
                 placeholder="usuario@empresa.com"
                 value={emailLogin}
                 onChange={(e) => setEmailLogin(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"
-              />
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"              />
             </div>
 
             <div>
@@ -598,8 +597,7 @@ export default function Home() {
                 placeholder="••••••••"
                 value={passwordLogin}
                 onChange={(e) => setPasswordLogin(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"
-              />
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"              />
             </div>
 
             {errorLogin && (
