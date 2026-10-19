@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
+import type { Session } from '@supabase/supabase-js';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
@@ -115,10 +116,31 @@ function validarEmail(correo: string): { valido: boolean; mensaje?: string } {
 }
 
 export default function Home() {
+  // Estados de Autenticación
+  const [session, setSession] = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [emailLogin, setEmailLogin] = useState('');
+  const [passwordLogin, setPasswordLogin] = useState('');
+  const [errorLogin, setErrorLogin] = useState('');
+  const [iniciandoSesion, setIniciandoSesion] = useState(false);
+
   const [ahora, setAhora] = useState<Date | null>(null);
 
   useEffect(() => {
     setAhora(new Date());
+
+    // Verificar sesión actual al cargar
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    // Escuchar cambios de sesión (login / logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const [tab, setTab] = useState<'tesoreria' | 'inventario' | 'contactos'>('tesoreria');
@@ -187,9 +209,32 @@ export default function Home() {
     setLoading(false);
   }
 
+  // Cargar datos solo cuando exista sesión válida
   useEffect(() => {
-    cargarDatos();
-  }, []);
+    if (session) {
+      cargarDatos();
+    }
+  }, [session]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorLogin('');
+    setIniciandoSesion(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: emailLogin.trim(),
+      password: passwordLogin,
+    });
+
+    if (error) {
+      setErrorLogin('Credenciales incorrectas. Verifica tu correo y contraseña.');
+    }
+    setIniciandoSesion(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   const handleTipoChange = (nuevoTipo: 'ingreso' | 'gasto') => {
     setTipoMov(nuevoTipo);
@@ -502,6 +547,84 @@ export default function Home() {
     saveAs(blob, `cierre_caja_${periodoFiltro}_${new Date().toISOString().slice(0, 10)}.xlsx`);
   };
 
+  // ==========================================
+  // RENDERIZADO CONDICIONAL DE AUTENTICACIÓN
+  // ==========================================
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <p className="text-sm font-medium text-gray-500 animate-pulse">Verificando sesión...</p>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-6 font-sans">
+        <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-8 space-y-6">
+          <div className="flex flex-col items-center text-center space-y-2">
+            <img
+              src="/logo-impulso.png"
+              alt="Logo Impulso Web"
+              className="w-14 h-14 object-contain rounded-xl bg-white p-1.5 border border-gray-100 shadow-sm"
+            />
+            <div className="flex items-center gap-2 pt-2">
+              <h1 className="text-xl font-black text-gray-900 tracking-tight">Acceso al Panel</h1>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">
+                Impulso Gestión
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">Introduce tus credenciales para gestionar tesorería e inventario</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Correo electrónico</label>
+              <input
+                type="email"
+                required
+                placeholder="usuario@empresa.com"
+                value={emailLogin}
+                onChange={(e) => setEmailLogin(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Contraseña</label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                value={passwordLogin}
+                onChange={(e) => setPasswordLogin(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"
+              />
+            </div>
+
+            {errorLogin && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 font-medium">
+                {errorLogin}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={iniciandoSesion}
+              className="w-full py-2.5 bg-black hover:bg-gray-800 text-white font-semibold text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              {iniciandoSesion ? 'Entrando...' : 'Iniciar Sesión'}
+            </button>
+          </form>
+        </div>
+
+        <p className="mt-8 text-xs text-gray-400">
+          Desarrollado por <strong className="text-gray-600">Impulso Web</strong>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 font-sans text-gray-800 flex flex-col justify-between">
       
@@ -573,10 +696,12 @@ export default function Home() {
                   <span>Descargar Excel Gestor</span>
                 </button>
               )}
-              <div className="flex items-center space-x-2 text-xs">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                <span className="text-gray-500 hidden md:inline">Supabase Activo</span>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors cursor-pointer"
+              >
+                Cerrar Sesión
+              </button>
             </div>
           </div>
         </nav>
