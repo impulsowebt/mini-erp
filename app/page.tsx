@@ -99,7 +99,7 @@ function validarTelefono(tel: string): { valido: boolean; mensaje?: string } {
   if (!regexInternacional.test(soloDigitos)) {
     return { 
       valido: false, 
-      mensaje: 'Introduce un teléfono válido (entre 7 y 15 dígitos con prefijo opcional).' 
+      mensaje: 'Introduce un teléfono válido (entre 7 y 15 dígitos).' 
     };
   }
   return { valido: true };
@@ -129,13 +129,11 @@ export default function Home() {
   useEffect(() => {
     setAhora(new Date());
 
-    // Verificar sesión actual al cargar
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setAuthLoading(false);
     });
 
-    // Escuchar cambios de sesión (login / logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
@@ -209,7 +207,6 @@ export default function Home() {
     setLoading(false);
   }
 
-  // Cargar datos solo cuando exista sesión válida
   useEffect(() => {
     if (session) {
       cargarDatos();
@@ -560,15 +557,15 @@ export default function Home() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-6 font-sans">
-        <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-8 space-y-6">
+      <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4 sm:p-6 font-sans">
+        <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 space-y-6">
           <div className="flex flex-col items-center text-center space-y-2">
             <img
               src="/logo-impulso.png"
               alt="Logo Impulso Web"
               className="w-14 h-14 object-contain rounded-xl bg-white p-1.5 border border-gray-100 shadow-sm"
             />
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
               <h1 className="text-xl font-black text-gray-900 tracking-tight">Acceso al Panel</h1>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">
                 Impulso Gestión
@@ -586,7 +583,8 @@ export default function Home() {
                 placeholder="usuario@empresa.com"
                 value={emailLogin}
                 onChange={(e) => setEmailLogin(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"              />
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"
+              />
             </div>
 
             <div>
@@ -597,7 +595,8 @@ export default function Home() {
                 placeholder="••••••••"
                 value={passwordLogin}
                 onChange={(e) => setPasswordLogin(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"              />
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-sm bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black"
+              />
             </div>
 
             {errorLogin && (
@@ -624,35 +623,47 @@ export default function Home() {
   }
 
   return (
-<div className="min-h-screen bg-gray-100 font-sans text-gray-800 flex flex-col justify-between overflow-x-hidden">      
+    <div className="min-h-screen bg-gray-100 font-sans text-gray-800 flex flex-col justify-between overflow-x-hidden">      
       <div>
-        {/* Barra de Navegación */}
+        {/* Barra de Navegación Responsiva */}
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-          <div className="max-w-6xl mx-auto px-4 py-3 md:px-6 md:h-16 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:space-x-4">
+          <div className="max-w-6xl mx-auto px-4 py-3 md:px-6 md:h-16 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            
+            <div className="flex flex-col md:flex-row md:items-center gap-4 w-full md:w-auto">
               
               {/* Branding Impulso Web */}
-              <div className="flex items-center gap-3">
-                <img
-                  src="/logo-impulso.png"
-                  alt="Logo Impulso Web"
-                  className="w-10 h-10 object-contain rounded-lg bg-white p-1 border border-gray-100 shadow-sm"
-                />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-black text-gray-900 tracking-tight">Versión Demo</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">
-                      Impulso Web
-                    </span>
+              <div className="flex items-center justify-between md:justify-start gap-3 w-full md:w-auto">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/logo-impulso.png"
+                    alt="Logo Impulso Web"
+                    className="w-10 h-10 object-contain rounded-lg bg-white p-1 border border-gray-100 shadow-sm"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-black text-gray-900 tracking-tight">Versión Demo</span>
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full hidden sm:inline-block">
+                        Impulso Web
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-gray-500 hidden sm:block">Control de Caja, Inventario y Tesorería</p>
                   </div>
-                  <p className="text-[11px] text-gray-500 hidden sm:block">Control de Caja, Inventario y Tesorería</p>
                 </div>
+                
+                {/* Botón Logout móvil (visible solo en pequeñas pantallas arriba a la derecha) */}
+                <button
+                  onClick={handleLogout}
+                  className="md:hidden px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors cursor-pointer"
+                >
+                  Salir
+                </button>
               </div>
 
-              {/* Pestañas de navegación */}
-<div className="flex flex-wrap gap-1.5">                <button
+              {/* Pestañas de navegación con scroll horizontal en móvil */}
+              <div className="flex overflow-x-auto pb-1 md:pb-0 gap-1.5 no-scrollbar w-full md:w-auto">
+                <button
                   onClick={() => setTab('tesoreria')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 whitespace-nowrap rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     tab === 'tesoreria' ? 'bg-black text-white' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -661,7 +672,7 @@ export default function Home() {
 
                 <button
                   onClick={() => setTab('inventario')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3 py-1.5 whitespace-nowrap rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                     tab === 'inventario' ? 'bg-black text-white' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -673,7 +684,7 @@ export default function Home() {
 
                 <button
                   onClick={() => setTab('contactos')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 whitespace-nowrap rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     tab === 'contactos' ? 'bg-black text-white' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -682,7 +693,9 @@ export default function Home() {
               </div>
             </div>
 
-<div className="flex items-center justify-end gap-2 border-t md:border-t-0 pt-2 md:pt-0 border-gray-100">              {tab === 'tesoreria' && (
+            {/* Acciones derecha (Desktop) */}
+            <div className="hidden md:flex items-center justify-end gap-2">              
+              {tab === 'tesoreria' && (
                 <button
                   onClick={exportarExcelBonito}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors cursor-pointer"
@@ -698,20 +711,32 @@ export default function Home() {
                 Cerrar Sesión
               </button>
             </div>
+            
+            {/* Botón Excel móvil */}
+            {tab === 'tesoreria' && (
+              <div className="md:hidden flex justify-end">
+                <button
+                  onClick={exportarExcelBonito}
+                  className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors cursor-pointer"
+                >
+                  <span>Descargar Excel para Gestoría</span>
+                </button>
+              </div>
+            )}
           </div>
         </nav>
 
         {/* Contenido Principal */}
-        <main className="max-w-6xl mx-auto p-6 md:p-10 space-y-6">
+        <main className="max-w-6xl mx-auto p-4 sm:p-6 md:p-10 space-y-6">
 
           {/* ================= PESTAÑA 1: TESORERÍA ================= */}
           {tab === 'tesoreria' && (
             <div className="space-y-6">
 
               {/* Selector de Periodo */}
-              <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+              <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Periodo Contable:</span>
-                <div className="flex flex-wrap gap-1 text-xs">
+                <div className="flex flex-wrap gap-1.5 text-xs">
                   <button
                     onClick={() => setPeriodoFiltro('mes_actual')}
                     className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
@@ -790,39 +815,40 @@ export default function Home() {
               </div>
 
               {/* Arqueo de Caja */}
-              <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-wrap items-center justify-between gap-4 text-xs">
+              <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs">
                 <span className="font-bold text-gray-500 uppercase tracking-wider">Desglose de Caja:</span>
-<div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:w-auto">                  <span>Caja Efectivo: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('efectivo').toFixed(2)} €</strong></span>
-                  <span>Datáfono / Tarjeta: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('tarjeta').toFixed(2)} €</strong></span>
-                  <span>Banco / Transferencia: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('transferencia').toFixed(2)} €</strong></span>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 w-full sm:w-auto">
+                  <span className="flex justify-between sm:block">Caja Efectivo: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('efectivo').toFixed(2)} €</strong></span>
+                  <span className="flex justify-between sm:block">Datáfono / Tarjeta: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('tarjeta').toFixed(2)} €</strong></span>
+                  <span className="flex justify-between sm:block">Banco / Transfer: <strong className="text-gray-900 ml-1">{calcSaldoMetodo('transferencia').toFixed(2)} €</strong></span>
                 </div>
               </div>
 
               {/* Formulario Movimiento */}
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
                 <h2 className="text-base font-bold text-gray-900 mb-4">Registrar Movimiento de Caja</h2>
                 
                 <form onSubmit={handleGuardarMovimiento} className="space-y-4">
                   
                   {tipoMov === 'ingreso' && productos.length > 0 && (
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg flex flex-wrap items-center gap-3 text-xs">
-                      <span className="font-bold text-blue-900">¿Es una venta de inventario?</span>
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg flex flex-col sm:flex-row sm:items-center gap-3 text-xs">
+                      <span className="font-bold text-blue-900 shrink-0">¿Es una venta de inventario?</span>
                       
                       <select
-  value={productoSeleccionadoId}
-  onChange={(e) => handleSeleccionarProducto(e.target.value)}
-  className="w-full sm:w-auto max-w-full border rounded-md p-2 bg-white text-gray-900 focus:outline-none truncate"
->
-  <option value="">(Venta directa / Servicio libre)</option>
-  {productos.map(p => (
-    <option key={p.id} value={p.id}>
-      {p.nombre} — {Number(p.precio_venta).toFixed(2)} € (Stock: {p.stock_actual} uds)
-    </option>
-  ))}
-</select>
+                        value={productoSeleccionadoId}
+                        onChange={(e) => handleSeleccionarProducto(e.target.value)}
+                        className="w-full sm:flex-1 border rounded-md p-2 bg-white text-gray-900 focus:outline-none truncate"
+                      >
+                        <option value="">(Venta directa / Servicio libre)</option>
+                        {productos.map(p => (
+                          <option key={p.id} value={p.id}>
+                            {p.nombre} — {Number(p.precio_venta).toFixed(2)} € (Stock: {p.stock_actual} uds)
+                          </option>
+                        ))}
+                      </select>
 
                       {productoSeleccionadoId && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 shrink-0">
                           <span className="text-blue-900">Cantidad:</span>
                           <input
                             type="number"
@@ -831,16 +857,13 @@ export default function Home() {
                             onChange={(e) => handleCambiarCantidad(e.target.value)}
                             className="w-16 border rounded-md p-1.5 bg-white text-center text-gray-800"
                           />
-                          <span className="text-[11px] text-blue-700 italic">
-                            (Se descontarán automáticamente del almacén)
-                          </span>
                         </div>
                       )}
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
-                    <div className="md:col-span-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4">
+                    <div className="col-span-1 md:col-span-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Tipo</label>
                       <select
                         value={tipoMov}
@@ -852,11 +875,11 @@ export default function Home() {
                       </select>
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="col-span-1 sm:col-span-2 md:col-span-2">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Concepto</label>
                       <input
                         type="text"
-                        placeholder="Ej. Revisión, Albarán piezas..."
+                        placeholder="Ej. Revisión, Albarán..."
                         value={concepto}
                         onChange={(e) => setConcepto(e.target.value)}
                         required
@@ -864,7 +887,7 @@ export default function Home() {
                       />
                     </div>
 
-                    <div className="md:col-span-1">
+                    <div className="col-span-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Importe (€)</label>
                       <input
                         type="number"
@@ -877,7 +900,7 @@ export default function Home() {
                       />
                     </div>
 
-                    <div className="md:col-span-1">
+                    <div className="col-span-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Categoría</label>
                       <select
                         value={categoriaId}
@@ -892,14 +915,14 @@ export default function Home() {
                       </select>
                     </div>
 
-                    <div className="md:col-span-1">
+                    <div className="col-span-1 sm:col-span-1 md:col-span-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Contacto Asignado</label>
                       <select
                         value={contactoId}
                         onChange={(e) => setContactoId(e.target.value)}
                         className="w-full border rounded-lg p-2 text-sm bg-gray-50 focus:bg-white"
                       >
-                        <option value="">(Sin asignar / General)</option>
+                        <option value="">(General)</option>
                         {contactos
                           .filter(c => tipoMov === 'ingreso' ? c.tipo === 'cliente' : c.tipo === 'proveedor')
                           .map(c => (
@@ -908,7 +931,7 @@ export default function Home() {
                       </select>
                     </div>
 
-                    <div className="md:col-span-1">
+                    <div className="col-span-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Método</label>
                       <select
                         value={metodoPago}
@@ -921,13 +944,12 @@ export default function Home() {
                       </select>
                     </div>
 
-                    <div className="sm:col-span-2 md:col-span-5 flex justify-end items-end mt-2">
-  <div className="sm:col-span-2 md:col-span-6 flex justify-end items-end mt-2">
-  <button
-    type="submit"
-    disabled={guardandoMov}
-    className="w-full sm:w-auto px-5 py-2.5 bg-black hover:bg-gray-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
-  >
+                    <div className="col-span-1 sm:col-span-2 md:col-span-6 flex justify-end items-end mt-2">
+                      <button
+                        type="submit"
+                        disabled={guardandoMov}
+                        className="w-full sm:w-auto px-6 py-2.5 bg-black hover:bg-gray-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+                      >
                         {guardandoMov ? 'Guardando...' : 'Añadir Registro'}
                       </button>
                     </div>
@@ -937,7 +959,7 @@ export default function Home() {
 
               {/* Historial con Botón Eliminar */}
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h2 className="text-base font-bold text-gray-900">Historial de Caja</h2>
                     <span className="text-xs text-gray-500">
@@ -945,22 +967,22 @@ export default function Home() {
                     </span>
                   </div>
                   
-                  <div className="flex gap-1.5 text-xs bg-gray-100 p-1 rounded-lg">
+                  <div className="flex flex-wrap gap-1.5 text-xs bg-gray-100 p-1 rounded-lg w-full md:w-auto justify-center">
                     <button
                       onClick={() => setFiltroTipo('todos')}
-                      className={`px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${filtroTipo === 'todos' ? 'bg-white shadow-sm text-gray-900 font-bold' : 'text-gray-600'}`}
+                      className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer flex-1 md:flex-none text-center ${filtroTipo === 'todos' ? 'bg-white shadow-sm text-gray-900 font-bold' : 'text-gray-600'}`}
                     >
                       Todos ({movimientosPorPeriodo.length})
                     </button>
                     <button
                       onClick={() => setFiltroTipo('ingreso')}
-                      className={`px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${filtroTipo === 'ingreso' ? 'bg-white shadow-sm text-green-700 font-bold' : 'text-gray-600'}`}
+                      className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer flex-1 md:flex-none text-center ${filtroTipo === 'ingreso' ? 'bg-white shadow-sm text-green-700 font-bold' : 'text-gray-600'}`}
                     >
                       Ingresos
                     </button>
                     <button
                       onClick={() => setFiltroTipo('gasto')}
-                      className={`px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${filtroTipo === 'gasto' ? 'bg-white shadow-sm text-red-700 font-bold' : 'text-gray-600'}`}
+                      className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer flex-1 md:flex-none text-center ${filtroTipo === 'gasto' ? 'bg-white shadow-sm text-red-700 font-bold' : 'text-gray-600'}`}
                     >
                       Gastos
                     </button>
@@ -968,45 +990,45 @@ export default function Home() {
                 </div>
 
                 {loading ? (
-                  <p className="p-6 text-sm text-gray-500">Cargando...</p>
+                  <p className="p-6 text-sm text-gray-500 text-center">Cargando datos...</p>
                 ) : movimientosFiltrados.length === 0 ? (
-                  <p className="p-6 text-sm text-gray-500">No hay movimientos registrados para este periodo o filtro.</p>
+                  <p className="p-6 text-sm text-gray-500 text-center">No hay movimientos registrados para este periodo o filtro.</p>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
+                  <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left text-sm min-w-[600px]">
                       <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                         <tr>
-                          <th className="px-6 py-3">Fecha</th>
-                          <th className="px-6 py-3">Concepto</th>
-                          <th className="px-6 py-3">Contacto</th>
-                          <th className="px-6 py-3">Categoría</th>
-                          <th className="px-6 py-3">Método</th>
-                          <th className="px-6 py-3 text-right">Importe</th>
-                          <th className="px-6 py-3 text-right">Acción</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Fecha</th>
+                          <th className="px-4 sm:px-6 py-3 min-w-[150px]">Concepto</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Contacto</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Categoría</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Método</th>
+                          <th className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">Importe</th>
+                          <th className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">Acción</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
                         {movimientosFiltrados.map((m) => (
                           <tr key={m.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-3 text-gray-500">{m.fecha}</td>
-                            <td className="px-6 py-3 font-medium text-gray-900">{m.concepto}</td>
-                            <td className="px-6 py-3 text-gray-600">
+                            <td className="px-4 sm:px-6 py-3 text-gray-500 whitespace-nowrap">{m.fecha}</td>
+                            <td className="px-4 sm:px-6 py-3 font-medium text-gray-900 truncate max-w-[200px] sm:max-w-none">{m.concepto}</td>
+                            <td className="px-4 sm:px-6 py-3 text-gray-600 whitespace-nowrap">
                               {m.contactos?.nombre ? (
                                 <span className="font-semibold text-gray-800">{m.contactos.nombre}</span>
                               ) : (
                                 <span className="text-gray-400 text-xs">—</span>
                               )}
                             </td>
-                            <td className="px-6 py-3">
-                              <span className="inline-block px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700">
+                            <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                              <span className="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-gray-100 text-gray-700">
                                 {m.categorias?.nombre || 'General'}
                               </span>
                             </td>
-                            <td className="px-6 py-3 text-gray-500 capitalize">{m.metodo_pago}</td>
-                            <td className={`px-6 py-3 text-right font-bold ${m.tipo === 'ingreso' ? 'text-green-600' : 'text-red-600'}`}>
+                            <td className="px-4 sm:px-6 py-3 text-gray-500 capitalize whitespace-nowrap">{m.metodo_pago}</td>
+                            <td className={`px-4 sm:px-6 py-3 text-right font-bold whitespace-nowrap ${m.tipo === 'ingreso' ? 'text-green-600' : 'text-red-600'}`}>
                               {m.tipo === 'ingreso' ? '+' : '-'}{Number(m.importe).toFixed(2)} €
                             </td>
-                            <td className="px-6 py-3 text-right">
+                            <td className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">
                               <button
                                 onClick={() => handleEliminarMovimiento(m.id, m.concepto, Number(m.importe))}
                                 className="px-2.5 py-1 text-xs font-semibold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 rounded transition-colors cursor-pointer"
@@ -1035,15 +1057,15 @@ export default function Home() {
                 </div>
               )}
 
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
                 <h2 className="text-base font-bold text-gray-900 mb-4">Añadir Artículo al Catálogo</h2>
                 
-                <form onSubmit={handleGuardarProducto} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
-                  <div className="md:col-span-2">
+                <form onSubmit={handleGuardarProducto} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="col-span-1 sm:col-span-2 md:col-span-2">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Nombre del Producto</label>
                     <input
                       type="text"
-                      placeholder="Ej. Aceite Sintético 5W30"
+                      placeholder="Ej. Champú Reparador"
                       value={nombreProd}
                       onChange={(e) => setNombreProd(e.target.value)}
                       required
@@ -1051,7 +1073,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-1">
+                  <div className="col-span-1">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Referencia / SKU</label>
                     <input
                       type="text"
@@ -1062,7 +1084,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-1">
+                  <div className="col-span-1">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Stock Inicial</label>
                     <input
                       type="number"
@@ -1074,7 +1096,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-1">
+                  <div className="col-span-1">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Stock Mínimo</label>
                     <input
                       type="number"
@@ -1085,7 +1107,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="col-span-1 sm:col-span-1 md:col-span-2">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Precio Compra (€)</label>
                     <input
                       type="number"
@@ -1097,7 +1119,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="col-span-1 sm:col-span-1 md:col-span-2">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Precio Venta PVP (€)</label>
                     <input
                       type="number"
@@ -1109,7 +1131,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-1 flex items-end">
+                  <div className="col-span-1 sm:col-span-2 md:col-span-1 flex items-end">
                     <button
                       type="submit"
                       disabled={guardandoProd}
@@ -1122,23 +1144,23 @@ export default function Home() {
               </div>
 
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200">
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
                   <h2 className="text-base font-bold text-gray-900">Control de Stock e Inventario</h2>
                 </div>
 
                 {productos.length === 0 ? (
-                  <p className="p-6 text-sm text-gray-500">No hay artículos en el catálogo.</p>
+                  <p className="p-6 text-sm text-gray-500 text-center">No hay artículos en el catálogo.</p>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
+                  <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left text-sm min-w-[600px]">
                       <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                         <tr>
-                          <th className="px-6 py-3">Artículo</th>
-                          <th className="px-6 py-3">SKU</th>
-                          <th className="px-6 py-3">P. Coste</th>
-                          <th className="px-6 py-3">PVP</th>
-                          <th className="px-6 py-3 text-center">Unidades</th>
-                          <th className="px-6 py-3 text-right">Ajuste</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Artículo</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">SKU</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">P. Coste</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">PVP</th>
+                          <th className="px-4 sm:px-6 py-3 text-center whitespace-nowrap">Unidades</th>
+                          <th className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">Ajuste</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
@@ -1146,30 +1168,32 @@ export default function Home() {
                           const esAlerta = p.stock_actual <= p.stock_minimo;
                           return (
                             <tr key={p.id} className="hover:bg-gray-50">
-                              <td className="px-6 py-3 font-medium text-gray-900">{p.nombre}</td>
-                              <td className="px-6 py-3 text-gray-500 text-xs font-mono">{p.sku || '—'}</td>
-                              <td className="px-6 py-3 text-gray-500">{Number(p.precio_compra).toFixed(2)} €</td>
-                              <td className="px-6 py-3 font-semibold text-gray-800">{Number(p.precio_venta).toFixed(2)} €</td>
-                              <td className="px-6 py-3 text-center">
-                                <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-bold ${
+                              <td className="px-4 sm:px-6 py-3 font-medium text-gray-900 truncate max-w-[200px]">{p.nombre}</td>
+                              <td className="px-4 sm:px-6 py-3 text-gray-500 text-xs font-mono whitespace-nowrap">{p.sku || '—'}</td>
+                              <td className="px-4 sm:px-6 py-3 text-gray-500 whitespace-nowrap">{Number(p.precio_compra).toFixed(2)} €</td>
+                              <td className="px-4 sm:px-6 py-3 font-semibold text-gray-800 whitespace-nowrap">{Number(p.precio_venta).toFixed(2)} €</td>
+                              <td className="px-4 sm:px-6 py-3 text-center whitespace-nowrap">
+                                <span className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold ${
                                   esAlerta ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-green-100 text-green-700'
                                 }`}>
-                                  {p.stock_actual} uds {esAlerta && '(Bajo stock)'}
+                                  {p.stock_actual} uds {esAlerta && '(Bajo)'}
                                 </span>
                               </td>
-                              <td className="px-6 py-3 text-right space-x-1">
-                                <button
-                                  onClick={() => actualizarStockRapido(p.id, p.stock_actual - 1)}
-                                  className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs font-bold text-gray-700 cursor-pointer"
-                                >
-                                  -1
-                                </button>
-                                <button
-                                  onClick={() => actualizarStockRapido(p.id, p.stock_actual + 1)}
-                                  className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs font-bold text-gray-700 cursor-pointer"
-                                >
-                                  +1
-                                </button>
+                              <td className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">
+                                <div className="flex justify-end gap-1">
+                                  <button
+                                    onClick={() => actualizarStockRapido(p.id, p.stock_actual - 1)}
+                                    className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs font-bold text-gray-700 cursor-pointer"
+                                  >
+                                    -1
+                                  </button>
+                                  <button
+                                    onClick={() => actualizarStockRapido(p.id, p.stock_actual + 1)}
+                                    className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs font-bold text-gray-700 cursor-pointer"
+                                  >
+                                    +1
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           );
@@ -1187,11 +1211,11 @@ export default function Home() {
             <div className="space-y-6">
               
               {/* Formulario Añadir Contacto */}
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
                 <h2 className="text-base font-bold text-gray-900 mb-4">Añadir Nuevo Contacto (Cliente / Proveedor)</h2>
                 
                 <form onSubmit={handleGuardarContacto} noValidate className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4">
-                  <div className="md:col-span-1">
+                  <div className="col-span-1 md:col-span-1">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Tipo</label>
                     <select
                       value={tipoContacto}
@@ -1203,11 +1227,11 @@ export default function Home() {
                     </select>
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="col-span-1 sm:col-span-2 md:col-span-2">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Nombre o Razón Social *</label>
                     <input
                       type="text"
-                      placeholder="Ej. Juan Pérez / Recambios Europa SL"
+                      placeholder="Ej. Juan Pérez / Empresa SL"
                       value={nombreContacto}
                       onChange={(e) => setNombreContacto(e.target.value)}
                       required
@@ -1215,11 +1239,11 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="md:col-span-1">
+                  <div className="col-span-1">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">CIF / NIF</label>
                     <input
                       type="text"
-                      placeholder="12345678Z o B12345678"
+                      placeholder="12345678Z"
                       value={cifNif}
                       onChange={(e) => {
                         setCifNif(e.target.value);
@@ -1234,11 +1258,11 @@ export default function Home() {
                     )}
                   </div>
 
-                  <div className="md:col-span-1">
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">Teléfono (Nacional o Int.)</label>
+                  <div className="col-span-1">
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Teléfono</label>
                     <input
                       type="tel"
-                      placeholder="+34 612 345 678 o +49 151 2345"
+                      placeholder="+34 612 345 678"
                       value={telefono}
                       onChange={(e) => {
                         setTelefono(e.target.value);
@@ -1253,11 +1277,11 @@ export default function Home() {
                     )}
                   </div>
 
-                  <div className="md:col-span-1">
+                  <div className="col-span-1 sm:col-span-2 md:col-span-1">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Email</label>
                     <input
                       type="email"
-                      placeholder="contacto@empresa.com"
+                      placeholder="correo@web.com"
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
@@ -1272,11 +1296,11 @@ export default function Home() {
                     )}
                   </div>
 
-                  <div className="md:col-span-6 flex justify-end">
+                  <div className="col-span-1 sm:col-span-2 md:col-span-6 flex justify-end mt-2">
                     <button
                       type="submit"
                       disabled={guardandoContacto}
-                      className="px-6 py-2.5 bg-black hover:bg-gray-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+                      className="w-full sm:w-auto px-6 py-2.5 bg-black hover:bg-gray-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
                     >
                       {guardandoContacto ? 'Guardando...' : 'Crear Contacto'}
                     </button>
@@ -1286,24 +1310,24 @@ export default function Home() {
 
               {/* Directorio de Contactos */}
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200">
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
                   <h2 className="text-base font-bold text-gray-900">Directorio de Clientes y Proveedores</h2>
                 </div>
 
                 {contactos.length === 0 ? (
-                  <p className="p-6 text-sm text-gray-500">No hay contactos registrados todavía.</p>
+                  <p className="p-6 text-sm text-gray-500 text-center">No hay contactos registrados todavía.</p>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
+                  <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left text-sm min-w-[600px]">
                       <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                         <tr>
-                          <th className="px-6 py-3">Nombre</th>
-                          <th className="px-6 py-3">Tipo</th>
-                          <th className="px-6 py-3">CIF / NIF</th>
-                          <th className="px-6 py-3">Teléfono</th>
-                          <th className="px-6 py-3">Email</th>
-                          <th className="px-6 py-3 text-right">Volumen Acumulado</th>
-                          <th className="px-6 py-3 text-right">Acción</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Nombre</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Tipo</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">CIF / NIF</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Teléfono</th>
+                          <th className="px-4 sm:px-6 py-3 whitespace-nowrap">Email</th>
+                          <th className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">Vol. Acumulado</th>
+                          <th className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">Acción</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
@@ -1314,21 +1338,21 @@ export default function Home() {
 
                           return (
                             <tr key={c.id} className="hover:bg-gray-50">
-                              <td className="px-6 py-3 font-semibold text-gray-900">{c.nombre}</td>
-                              <td className="px-6 py-3">
-                                <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold uppercase ${
+                              <td className="px-4 sm:px-6 py-3 font-semibold text-gray-900 truncate max-w-[150px]">{c.nombre}</td>
+                              <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                                <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold uppercase ${
                                   c.tipo === 'cliente' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
                                 }`}>
                                   {c.tipo}
                                 </span>
                               </td>
-                              <td className="px-6 py-3 text-gray-500 font-mono text-xs">{c.cif_nif || '—'}</td>
-                              <td className="px-6 py-3 text-gray-600">{c.telefono || '—'}</td>
-                              <td className="px-6 py-3 text-gray-600">{c.email || '—'}</td>
-                              <td className="px-6 py-3 text-right font-bold text-gray-900">
+                              <td className="px-4 sm:px-6 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">{c.cif_nif || '—'}</td>
+                              <td className="px-4 sm:px-6 py-3 text-gray-600 whitespace-nowrap">{c.telefono || '—'}</td>
+                              <td className="px-4 sm:px-6 py-3 text-gray-600 truncate max-w-[150px]">{c.email || '—'}</td>
+                              <td className="px-4 sm:px-6 py-3 text-right font-bold text-gray-900 whitespace-nowrap">
                                 {totalMovs.toFixed(2)} €
                               </td>
-                              <td className="px-6 py-3 text-right">
+                              <td className="px-4 sm:px-6 py-3 text-right whitespace-nowrap">
                                 <button
                                   onClick={() => handleEliminarContacto(c.id, c.nombre)}
                                   className="px-2.5 py-1 text-xs font-semibold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 rounded transition-colors cursor-pointer"
