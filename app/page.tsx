@@ -797,16 +797,16 @@ export default function Home() {
               </div>
               
               {/* Métricas Principales */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <div className="bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="col-span-1 bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                   <p className="text-[10px] sm:text-xs uppercase font-bold text-gray-400 truncate">Total Ingresos</p>
                   <p className="text-lg sm:text-2xl font-extrabold text-green-600 mt-1 truncate">+{totalIngresos.toFixed(2)} €</p>
                 </div>
-                <div className="bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div className="col-span-1 bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                   <p className="text-[10px] sm:text-xs uppercase font-bold text-gray-400 truncate">Total Gastos</p>
                   <p className="text-lg sm:text-2xl font-extrabold text-red-600 mt-1 truncate">-{totalGastos.toFixed(2)} €</p>
                 </div>
-                <div className="col-span-2 sm:col-span-1 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div className="col-span-2 sm:col-span-1 bg-white p-5 rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                   <p className="text-xs uppercase font-bold text-gray-400">Beneficio Neto</p>
                   <p className={`text-2xl font-extrabold mt-1 ${beneficioNeto >= 0 ? 'text-gray-900' : 'text-red-500'}`}>
                     {beneficioNeto.toFixed(2)} €
